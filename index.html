@@ -8,7 +8,7 @@
 <meta property="og:title" content="Adullin Games">
 <meta property="og:description" content="Independent mobile game studio: Stack Rise, 67 Block, Evolution 67.">
 <meta property="og:image" content="https://ded12let.github.io/assets/stackrise-banner.jpg">
-<link rel="icon" href="assets/emblem.png">
+<link rel="icon" href="assets/emblem-small.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -112,7 +112,9 @@
 
   /* эмблема: влёт с поворотом, кольца искр вокруг */
   .emblem-wrap { position: relative; width: min(300px, 70vw); aspect-ratio: 1; margin: 0 auto; animation: emblemIn 1.2s cubic-bezier(.2,.9,.25,1.2) both; }
-  .emblem-wrap .emblem { width: 100%; animation: float 6s ease-in-out 1.2s infinite; }
+  /* эмблема с прозрачным фоном — внутри колец, с отступом и мягким золотым свечением */
+  .emblem-wrap .emblem { position: absolute; left: 11%; top: 11%; width: 78%; animation: float 6s ease-in-out 1.2s infinite;
+    filter: drop-shadow(0 0 22px rgba(231,181,102,0.35)) drop-shadow(0 0 60px rgba(122,75,196,0.35)); }
   .ring { position: absolute; inset: -6%; border-radius: 50%; border: 2px dotted rgba(231,181,102,0.55); animation: spin 28s linear infinite; }
   .ring.r2 { inset: 4%; border: 1px dashed rgba(160,120,230,0.45); animation-duration: 40s; animation-direction: reverse; }
   .ring::after { content: ""; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%;
@@ -172,7 +174,7 @@
 
 <header>
   <div class="wrap nav">
-    <a class="brand" href="#top"><img src="assets/emblem.png" alt=""> Adullin Games</a>
+    <a class="brand" href="#top"><img src="assets/emblem-small.png" alt=""> Adullin Games</a>
     <nav class="links">
       <a href="#games" class="hide-sm"><span data-ru>Игры</span><span data-en>Games</span></a>
       <a href="#contact" class="hide-sm"><span data-ru>Контакты</span><span data-en>Contact</span></a>
