@@ -103,11 +103,71 @@
     .stores .policy { margin-left: 0; width: 100%; }
     footer .row .right { margin-left: 0; }
   }
+  /* ---------- моушен ---------- */
+  #sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .cursor-glow { position: fixed; left: 0; top: 0; width: 520px; height: 520px; margin: -260px 0 0 -260px; z-index: 0; pointer-events: none;
+    background: radial-gradient(circle, rgba(231,181,102,0.10), rgba(122,75,196,0.06) 40%, transparent 70%); opacity: 0; transition: opacity .4s; }
+  main, footer { position: relative; z-index: 1; }
+
+  /* эмблема: влёт с поворотом, кольца искр вокруг */
+  .emblem-wrap { position: relative; width: min(300px, 70vw); aspect-ratio: 1; margin: 0 auto; animation: emblemIn 1.2s cubic-bezier(.2,.9,.25,1.2) both; }
+  .emblem-wrap .emblem { width: 100%; animation: float 6s ease-in-out 1.2s infinite; }
+  .ring { position: absolute; inset: -6%; border-radius: 50%; border: 2px dotted rgba(231,181,102,0.55); animation: spin 28s linear infinite; }
+  .ring.r2 { inset: 4%; border: 1px dashed rgba(160,120,230,0.45); animation-duration: 40s; animation-direction: reverse; }
+  .ring::after { content: ""; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%;
+    background: #ffe2a8; box-shadow: 0 0 14px 4px rgba(231,181,102,0.8); }
+  .ring.r2::after { background: #cdb3ff; box-shadow: 0 0 12px 3px rgba(150,110,230,0.8); top: auto; bottom: -5px; }
+  @keyframes emblemIn { from { opacity: 0; transform: scale(.55) rotate(-35deg); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* название: золотой блик пробегает по буквам */
+  .hero h1 { background: linear-gradient(100deg, var(--gold2) 0%, var(--gold) 35%, #fff6e2 50%, var(--gold) 65%, var(--gold2) 100%);
+    background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; animation: shine 5s ease-in-out 1.4s infinite, rise .9s .35s both; }
+  @keyframes shine { 0% { background-position: 100% 0; } 60%, 100% { background-position: -50% 0; } }
+
+  /* каскад появления на первом экране */
+  .in { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0s); }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+
+  /* золотая кнопка с бегущим бликом */
+  .btn { position: relative; overflow: hidden; }
+  .btn.gold::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; transform: skewX(-20deg);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent); animation: sweep 3.2s ease-in-out 2s infinite; }
+  @keyframes sweep { 0% { left: -60%; } 40%, 100% { left: 130%; } }
+  .btn.gold:hover { box-shadow: 0 10px 30px rgba(231,181,102,0.35); }
+
+  /* появление при прокрутке */
+  .reveal { opacity: 0; transform: translateY(46px) scale(.98); transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1); transition-delay: var(--d, 0s); }
+  .reveal.on { opacity: 1; transform: none; }
+  .shots img { opacity: 0; transform: translateX(40px) rotate(2deg); transition: opacity .7s, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .game.on .shots img { opacity: 1; transform: none; }
+
+  /* карточка игры: наклон за курсором и блик */
+  .game { position: relative; will-change: transform; }
+  .game.reveal.on { transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .25s ease-out; }  /* наклон — без задержки появления */
+  .game::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; opacity: 0; transition: opacity .3s;
+    background: radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(255,226,168,0.10), transparent 45%); }
+  .game:hover::after { opacity: 1; }
+  .game .banner { transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+  .game:hover .banner { transform: scale(1.04); }
+  .game .icon { transition: transform .4s cubic-bezier(.2,.9,.3,1.4); }
+  .game:hover .icon { transform: rotate(-6deg) scale(1.08); }
+  .about .box { transition: transform .3s, border-color .3s; }
+  .about .box:hover { transform: translateY(-4px); border-color: rgba(231,181,102,0.4); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal, .shots img { opacity: 1 !important; transform: none !important; }
+    #sparks, .cursor-glow { display: none; }
+  }
+
   /* Два языка в разметке: скрывается тот, что не выбран (important — сильнее правил вроде .btn small). */
   html:not([lang="en"]) [data-en], html[lang="en"] [data-ru] { display: none !important; }
 </style>
 </head>
 <body>
+<canvas id="sparks" aria-hidden="true"></canvas>
+<div class="cursor-glow" aria-hidden="true"></div>
 
 <header>
   <div class="wrap nav">
@@ -123,11 +183,11 @@
 <main id="top">
   <div class="hero">
     <div class="wrap">
-      <img class="emblem" src="assets/emblem.png" alt="Adullin Games">
+      <div class="emblem-wrap"><span class="ring"></span><span class="ring r2"></span><img class="emblem" src="assets/emblem.png" alt="Adullin Games"></div>
       <h1>Adullin Games</h1>
-      <p data-ru>Независимая студия мобильных игр. Делаем яркие, простые и затягивающие игры, в которые приятно возвращаться.</p>
-      <p data-en>An independent mobile game studio. We make bright, simple and addictive games you'll want to come back to.</p>
-      <div class="cta">
+      <p class="in" style="--d:.6s" data-ru>Независимая студия мобильных игр. Делаем яркие, простые и затягивающие игры, в которые приятно возвращаться.</p>
+      <p class="in" style="--d:.6s" data-en>An independent mobile game studio. We make bright, simple and addictive games you'll want to come back to.</p>
+      <div class="cta in" style="--d:.85s">
         <a class="btn gold" href="#games"><span class="big"><span data-ru>Наши игры</span><span data-en>Our games</span></span></a>
         <a class="btn" href="#contact"><span class="big"><span data-ru>Связаться</span><span data-en>Contact us</span></span></a>
       </div>
@@ -136,12 +196,12 @@
 
   <section id="games">
     <div class="wrap">
-      <h2 class="section-title"><span data-ru>Игры</span><span data-en>Games</span></h2>
-      <p class="section-sub" data-ru>Бесплатно для Android.</p>
-      <p class="section-sub" data-en>Free on Android.</p>
+      <h2 class="section-title reveal"><span data-ru>Игры</span><span data-en>Games</span></h2>
+      <p class="section-sub reveal" style="--d:.1s" data-ru>Бесплатно для Android.</p>
+      <p class="section-sub reveal" style="--d:.1s" data-en>Free on Android.</p>
 
       <!-- Stack Rise -->
-      <article class="game" id="stackrise">
+      <article class="game reveal" id="stackrise">
         <img class="banner" src="assets/stackrise-banner.jpg" alt="Stack Rise">
         <div class="body">
           <div class="head">
@@ -180,7 +240,7 @@
       </article>
 
       <!-- Эволюция 67 -->
-      <article class="game" id="evolution67">
+      <article class="game reveal" id="evolution67">
         <div class="banner gradient"><img src="assets/evolution67-icon.jpg" alt="Evolution 67"></div>
         <div class="body">
           <div class="head">
@@ -214,20 +274,20 @@
 
   <section id="contact">
     <div class="wrap">
-      <h2 class="section-title"><span data-ru>О студии</span><span data-en>About</span></h2>
-      <p class="section-sub" data-ru>Небольшая команда, которая сама придумывает, рисует и программирует свои игры.</p>
-      <p class="section-sub" data-en>A small team that designs, draws and codes its own games.</p>
+      <h2 class="section-title reveal"><span data-ru>О студии</span><span data-en>About</span></h2>
+      <p class="section-sub reveal" style="--d:.1s" data-ru>Небольшая команда, которая сама придумывает, рисует и программирует свои игры.</p>
+      <p class="section-sub reveal" style="--d:.1s" data-en>A small team that designs, draws and codes its own games.</p>
       <div class="about">
-        <div class="box">
+        <div class="box reveal" style="--d:0.12s">
           <h3><span data-ru>Почта</span><span data-en>Email</span></h3>
           <p><a href="mailto:lofhk3854dv@gmail.com">lofhk3854dv@gmail.com</a></p>
         </div>
-        <div class="box">
+        <div class="box reveal" style="--d:0.24s">
           <h3><span data-ru>Поддержка игроков</span><span data-en>Player support</span></h3>
           <p data-ru>Нашли ошибку или есть идея? Напишите нам — отвечаем на каждое письмо.</p>
           <p data-en>Found a bug or have an idea? Write to us — we answer every email.</p>
         </div>
-        <div class="box">
+        <div class="box reveal" style="--d:0.36s">
           <h3><span data-ru>Для рекламодателей</span><span data-en>Advertisers</span></h3>
           <p data-ru>Список авторизованных продавцов рекламы: <a href="app-ads.txt">app-ads.txt</a></p>
           <p data-en>Authorized ad sellers: <a href="app-ads.txt">app-ads.txt</a></p>
@@ -266,6 +326,107 @@
       try { localStorage.setItem('lang', l); } catch (e) {}
       apply(l);
     });
+  })();
+</script>
+<script>
+  // Моушен: искры на фоне, свечение за курсором, появление при прокрутке, наклон карточек, автопрокрутка скриншотов.
+  (function () {
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fine = window.matchMedia && matchMedia('(pointer: fine)').matches;
+
+    // Появление при прокрутке (без анимации — сразу видно).
+    var items = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      for (var i = 0; i < items.length; i++) items[i].classList.add('on');
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('on');
+          // скриншоты выезжают по очереди
+          var shots = e.target.querySelectorAll('.shots img');
+          for (var k = 0; k < shots.length; k++) shots[k].style.transitionDelay = (0.25 + k * 0.09) + 's';
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      for (var j = 0; j < items.length; j++) io.observe(items[j]);
+    }
+    if (reduce) return;
+
+    // Золотые и фиолетовые искры, медленно всплывающие вверх; на телефоне их меньше.
+    var canvas = document.getElementById('sparks'), ctx = canvas.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var parts = [], W = 0, H = 0;
+    function resize() {
+      W = innerWidth; H = innerHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var want = Math.round(Math.min(70, W * H / 22000));
+      while (parts.length < want) parts.push(spawn(true));
+      parts.length = want;
+    }
+    function spawn(anywhere) {
+      return { x: Math.random() * W, y: anywhere ? Math.random() * H : H + 10, r: 0.6 + Math.random() * 1.8,
+               vy: 0.15 + Math.random() * 0.45, vx: (Math.random() - 0.5) * 0.15, ph: Math.random() * 6.28,
+               gold: Math.random() < 0.75 };
+    }
+    var mx = -999, my = -999, scrollY0 = 0;
+    function frame(t) {
+      ctx.clearRect(0, 0, W, H);
+      var dy = scrollY - scrollY0; scrollY0 = scrollY;
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.y -= p.vy + dy * 0.05 * p.r; p.x += p.vx + Math.sin(t / 1400 + p.ph) * 0.12;
+        // искры чуть разлетаются от курсора
+        var ddx = p.x - mx, ddy = p.y - my, d2 = ddx * ddx + ddy * ddy;
+        if (d2 < 9000) { p.x += ddx / 60; p.y += ddy / 60; }
+        if (p.y < -10 || p.x < -10 || p.x > W + 10) parts[i] = p = spawn(false);
+        var tw = 0.45 + 0.55 * Math.sin(t / 600 + p.ph);
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283);
+        ctx.fillStyle = p.gold ? 'rgba(255,214,140,' + (0.25 + 0.5 * tw) + ')' : 'rgba(176,140,255,' + (0.2 + 0.4 * tw) + ')';
+        ctx.shadowBlur = 8 * p.r; ctx.shadowColor = p.gold ? 'rgba(231,181,102,0.9)' : 'rgba(140,100,230,0.9)';
+        ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+    addEventListener('resize', resize); resize(); requestAnimationFrame(frame);
+
+    // Свечение за курсором (только мышь).
+    var glow = document.querySelector('.cursor-glow');
+    if (fine) addEventListener('mousemove', function (e) {
+      mx = e.clientX; my = e.clientY; glow.style.opacity = 1;
+      glow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
+    });
+
+    // Карточки игр: лёгкий 3D-наклон и блик за курсором.
+    var cards = document.querySelectorAll('.game');
+    if (fine) for (var c = 0; c < cards.length; c++) (function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--mx', (x * 100) + '%'); card.style.setProperty('--my', (y * 100) + '%');
+        card.style.transform = 'perspective(1400px) rotateX(' + ((0.5 - y) * 3) + 'deg) rotateY(' + ((x - 0.5) * 4) + 'deg)';
+      });
+      card.addEventListener('mouseleave', function () { card.style.transform = ''; });
+    })(cards[c]);
+
+    // Скриншоты медленно едут сами туда-обратно; стоят, пока на них курсор или палец.
+    var strips = document.querySelectorAll('.shots');
+    for (var s = 0; s < strips.length; s++) (function (el) {
+      var dir = 1, hold = false, visible = false, pos = 0;
+      el.addEventListener('mouseenter', function () { hold = true; });
+      el.addEventListener('mouseleave', function () { hold = false; pos = el.scrollLeft; });
+      el.addEventListener('touchstart', function () { hold = true; }, { passive: true });
+      el.addEventListener('touchend', function () { setTimeout(function () { hold = false; pos = el.scrollLeft; }, 2500); });
+      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(el);
+      el.style.scrollSnapType = 'none';
+      (function step() {
+        var max = el.scrollWidth - el.clientWidth;
+        if (visible && !hold && max > 0) {
+          pos += dir * 0.35;
+          if (pos >= max) { pos = max; dir = -1; } else if (pos <= 0) { pos = 0; dir = 1; }
+          el.scrollLeft = pos;
+        }
+        requestAnimationFrame(step);
+      })();
+    })(strips[s]);
   })();
 </script>
 </body>
