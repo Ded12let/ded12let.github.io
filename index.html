@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adullin Games — мобильные игры</title>
-<meta name="description" content="Adullin Games — независимая студия мобильных игр: Stack Rise, Эволюция 67.">
+<meta name="description" content="Adullin Games — независимая студия мобильных игр: Stack Rise, Собери 67, Эволюция 67.">
 <meta property="og:title" content="Adullin Games">
-<meta property="og:description" content="Independent mobile game studio: Stack Rise, Evolution 67.">
+<meta property="og:description" content="Independent mobile game studio: Stack Rise, 67 Block, Evolution 67.">
 <meta property="og:image" content="https://ded12let.github.io/assets/stackrise-banner.jpg">
 <link rel="icon" href="assets/emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,6 +68,7 @@
   .game .banner.gradient { aspect-ratio: auto; height: 220px; background:
       radial-gradient(circle at 30% 40%, rgba(122,75,196,0.55), transparent 55%),
       radial-gradient(circle at 75% 60%, rgba(231,181,102,0.35), transparent 55%), #15121f; display: grid; place-items: center; }
+  .game .banner.gradient.blue { background: radial-gradient(circle at 30% 40%, rgba(60,110,255,0.6), transparent 55%), radial-gradient(circle at 75% 60%, rgba(0,200,255,0.4), transparent 55%), #0f1a33; }
   .game .banner.gradient img { width: 150px; height: 150px; border-radius: 34px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
   .game .body { padding: 26px 28px 30px; }
   .game .head { display: flex; gap: 18px; align-items: center; }
@@ -239,6 +240,45 @@
         </div>
       </article>
 
+      <!-- Собери 67 -->
+      <article class="game reveal" id="block67">
+        <div class="banner gradient blue"><img src="assets/block67-icon.jpg" alt="67 Block"></div>
+        <div class="body">
+          <div class="head">
+            <img class="icon" src="assets/block67-icon.jpg" alt="67 Block">
+            <div>
+              <h3><span data-ru>Собери 67</span><span data-en>67 Block</span></h3>
+              <div class="tags"><span class="tag"><span data-ru>Головоломка</span><span data-en>Puzzle</span></span><span class="tag">Android</span></div>
+            </div>
+          </div>
+          <p class="desc" data-ru>Головоломка в духе Block Blast с неожиданным поворотом: ставь фигуры на поле 8×8 и собирай из блоков цифры 6 и 7. Собранная цифра исчезает и приносит очки, а несколько цифр за раз — бонус.</p>
+          <p class="desc" data-en>A Block Blast-style puzzle with a twist: place pieces on an 8×8 board and build the digits 6 and 7 out of blocks. A finished digit clears and scores — several at once give a bonus.</p>
+          <ul class="feat" data-ru>
+            <li>Собирай цифры 6 и 7 вместо линий</li>
+            <li>Короткие партии и рекорды</li>
+          </ul>
+          <ul class="feat" data-en>
+            <li>Build 6s and 7s instead of lines</li>
+            <li>Quick rounds and high scores</li>
+          </ul>
+          <div class="shots">
+            <img src="assets/block67-1.jpg" alt="" loading="lazy"><img src="assets/block67-2.jpg" alt="" loading="lazy"><img src="assets/block67-3.jpg" alt="" loading="lazy">
+            <img src="assets/block67-4.jpg" alt="" loading="lazy"><img src="assets/block67-5.jpg" alt="" loading="lazy"><img src="assets/block67-6.jpg" alt="" loading="lazy">
+          </div>
+          <div class="stores">
+            <a class="btn" href="https://play.google.com/store/apps/details?id=com.AdillinGames.block67" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#e7b566" d="M4 2.5v19l10-9.5L4 2.5zm11.5 8.1 2.8-2.7L6.3 1.3l9.2 9.3zm0 2.8-9.2 9.3 12-6.6-2.8-2.7zm3.7-4.4-2.9 2.9 2.9 2.9 3.3-1.8c.9-.5.9-1.7 0-2.2l-3.3-1.8z"/></svg>
+              <span><small data-ru>Скачать в</small><small data-en>Get it on</small><span class="big">Google Play</span></span>
+            </a>
+            <a class="btn" href="https://www.rustore.ru/catalog/app/com.AdillinGames.block67" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="6" fill="#e7b566"/><path fill="#1a1408" d="M8 7h5.2a3.3 3.3 0 0 1 1.2 6.4L17 17h-2.6l-2.3-3.3H10.2V17H8V7zm2.2 2v2.8h2.9a1.4 1.4 0 0 0 0-2.8h-2.9z"/></svg>
+              <span><small data-ru>Скачать в</small><small data-en>Get it on</small><span class="big">RuStore</span></span>
+            </a>
+            <a class="policy" href="block67/privacy.html"><span data-ru>Политика конфиденциальности</span><span data-en>Privacy Policy</span></a>
+          </div>
+        </div>
+      </article>
+
       <!-- Эволюция 67 -->
       <article class="game reveal" id="evolution67">
         <div class="banner gradient"><img src="assets/evolution67-icon.jpg" alt="Evolution 67"></div>
@@ -301,7 +341,7 @@
   <div class="wrap row">
     <span>© 2026 Adullin Games</span>
     <a href="stackrise/privacy.html">Stack Rise — <span data-ru>политика</span><span data-en>privacy</span></a>
-    <a href="https://ded12let.github.io/evolution67-privacy/privacy.html"><span data-ru>Эволюция 67 — политика</span><span data-en>Evolution 67 — privacy</span></a>
+    <a href="block67/privacy.html"><span data-ru>Собери 67 — политика</span><span data-en>67 Block — privacy</span></a>`n    <a href="https://ded12let.github.io/evolution67-privacy/privacy.html"><span data-ru>Эволюция 67 — политика</span><span data-en>Evolution 67 — privacy</span></a>
     <span class="right"><a href="app-ads.txt">app-ads.txt</a></span>
   </div>
 </footer>
